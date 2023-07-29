@@ -8,7 +8,6 @@ const cors = require("cors");
 
 app.use(cors());
 app.use(express.json());
-// mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.euxm4cs.mongodb.net/?retryWrites=true&w=majority
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.afkplob.mongodb.net/?retryWrites=true&w=majority`;
 console.log(uri);
 const client = new MongoClient(uri, {
@@ -33,8 +32,15 @@ const run = async () => {
       const id = req.params.id;
 
       const result = await productCollection.findOne({ _id: ObjectId(id) });
-      console.log(result);
+
       res.send(result);
+    });
+
+    app.get("/allPc/:category", async (req, res) => {
+      const category = req.params.category;
+      const result = await productCollection.find({ category }).toArray();
+      console.log(result);
+      res.send({ status: true, data: result });
     });
   } finally {
   }
